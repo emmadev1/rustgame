@@ -15,11 +15,12 @@ struct Player {
     max_hp: i16,
     current_hp: i16,
     strength: i16,
+    defense: i16,
 }
 
 impl Player {
     fn dmg_calc (&self, s: &Player) -> i16 {
-        self.strength
+        self.strength - s.defense
     } 
 }
 
@@ -45,6 +46,7 @@ fn game_init() {
         max_hp: thread_rng().gen_range(20..=200),
         current_hp: 0,
         strength: thread_rng().gen_range(20..=50),
+        defense: thread_rng().gen_range(0..=15),
     };    
     player1.current_hp = player1.max_hp;
     println!("{:?}", player1);
@@ -55,6 +57,7 @@ fn game_init() {
         max_hp: thread_rng().gen_range(20..=200),
         current_hp: 0,
         strength: thread_rng().gen_range(20..=50),
+        defense: thread_rng().gen_range(0..=15),
     };
     player2.current_hp = player2.max_hp;
     println!("{:?}", player2);
