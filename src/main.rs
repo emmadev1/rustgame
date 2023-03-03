@@ -69,45 +69,47 @@ fn game_init() {
     game_core(player1, player2);
 }
 
-fn game_core(mut p1: Player, mut p2: Player) {
+fn game_core(mut p1: Player, mut ai1: Player) {
     while true {
         println!("Player HP: {}", p1.current_hp);
-        println!("AI HP: {}", p2.current_hp);
+        println!("AI HP: {}", ai1.current_hp);
         if p1.current_hp <= 0 {
-            println!("AI wins DEBUG:\n{:?}\n{:?}", p1, p2);
+            println!("AI wins DEBUG:\n{:?}\n{:?}", p1, ai1);
             break
-        } else if p2.current_hp <= 0 {
-            println!("Player wins DEBUG:\n{:?}\n{:?}", p1, p2);
+        } else if ai1.current_hp <= 0 {
+            println!("Player wins DEBUG:\n{:?}\n{:?}", p1, ai1);
             break
         }
 
-        p2.current_hp -= usr_turn(&p1, &p2);
-        p1.current_hp -= ai_turn(&p1, &p2);
+        ai1.current_hp -= usr_turn(&p1, &ai1);
+        p1.current_hp -= ai_turn(&p1, &ai1);
 
         thread::sleep(time::Duration::from_secs(2));
    }
 }
 
-fn usr_turn(p1: &Player, p2: &Player) -> i16 {
+fn usr_turn(p1: &Player, ai1: &Player) -> i16 {
     let mut usrin: String = String::new();
     io::stdin().read_line(&mut usrin).expect("no");
     
     if usrin.trim() == String::from("1") {
-        p1.attack_basic(&p2)
+        p1.attack_basic(&ai1)
     } else if usrin.trim() == String::from("2") {
-        p1.attack_magic(&p2)
+        p1.attack_magic(&ai1)
     } else {
+        println!("No");
         0
     }
 }
 
-fn ai_turn(p1: &Player, p2: &Player) -> i16 {
+fn ai_turn(ai1: &Player, p1: &Player) -> i16 {
     let selec: u8 = thread_rng().gen_range(0..=1);
     if selec == 0 {
-        p1.attack_basic(&p2)
+        ai1.attack_basic(&p1)
     } else if selec == 1 {
-        p1.attack_magic(&p2)
+        ai1.attack_magic(&p1)
     } else {
+        println!("No");
         0
     }
 }
