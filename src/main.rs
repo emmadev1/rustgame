@@ -19,9 +19,13 @@ struct Player {
 }
 
 impl Player {
-    fn dmg_calc (&self, s: &Player) -> i16 {
+    fn attack_basic (&self, s: &Player) -> i16 {
         self.strength - s.defense
     } 
+
+    fn attack_magic (&self, s: &Player) -> i16 {
+        self.strength
+    }
 }
 
 fn main() {
@@ -67,18 +71,43 @@ fn game_init() {
 
 fn game_core(mut p1: Player, mut p2: Player) {
     while true {
-        println!("P1 HP: {}", p1.current_hp);
-        println!("P2 HP: {}", p2.current_hp);
+        println!("Player HP: {}", p1.current_hp);
+        println!("AI HP: {}", p2.current_hp);
         if p1.current_hp <= 0 {
-            println!("p1 wins DEBUG:{:?}", p1);
+            println!("AI wins DEBUG:\n{:?}\n{:?}", p1, p2);
             break
         } else if p2.current_hp <= 0 {
-            println!("p2 wins DEBUG:{:?}", p2);
+            println!("Player wins DEBUG:\n{:?}\n{:?}", p1, p2);
             break
         }
-        p2.current_hp -= p1.dmg_calc(&p2);
-        p1.current_hp -= p2.dmg_calc(&p1);
+
+        p2.current_hp -= usr_turn(&p1, &p2);
+        p1.current_hp -= ai_turn(&p1, &p2);
 
         thread::sleep(time::Duration::from_secs(2));
    }
+}
+
+fn usr_turn(p1: &Player, p2: &Player) -> i16 {
+    let mut usrin: String = String::new();
+    io::stdin().read_line(&mut usrin).expect("no");
+    
+    if usrin.trim() == String::from("1") {
+        p1.attack_basic(&p2)
+    } else if usrin.trim() == String::from("2") {
+        p1.attack_magic(&p2)
+    } else {
+        0
+    }
+}
+
+fn ai_turn(p1: &Player, p2: &Player) -> i16 {
+    let selec: u8 = thread_rng().gen_range(0..=1);
+    if selec == 0 {
+        p1.attack_basic(&p2)
+    } else if selec == 1 {
+        p1.attack_magic(&p2)
+    } else {
+        0
+    }
 }
