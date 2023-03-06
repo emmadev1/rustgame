@@ -9,6 +9,18 @@ enum Ctype {
 }
 
 #[derive(Debug)]
+enum Stype {
+    A,
+    B,
+    C,
+}
+
+#[derive(Debug)]
+struct Stage {
+    size: u8,
+}
+
+#[derive(Debug)]
 struct Player {
     is_player: bool,
     name: String,
@@ -100,8 +112,10 @@ fn usr_turn(p1: &Player, ai1: &Player) -> i16 {
     io::stdin().read_line(&mut usrin).expect("no");
     
     if usrin.trim() == String::from("1") {
+        println!("{} uses basic!", p1.name);
         p1.attack_basic(&ai1)
     } else if usrin.trim() == String::from("2") {
+        println!("{} uses magic!", p1.name);
         p1.attack_magic(&ai1)
     } else {
         println!("No");
@@ -113,10 +127,13 @@ fn ai_turn(ai1: &Player, p1: &Player) -> i16 {
     let selec: u8 = thread_rng().gen_range(0..=1);
 
     if p1.defense > 11 {
+        println!("Ai uses magic!");
         ai1.attack_magic(&p1)
     } else if selec == 0 {
+        println!("Ai uses basic!");
         ai1.attack_basic(&p1)
     } else if selec == 1 {
+        println!("Ai uses magic!");
         ai1.attack_magic(&p1)
     } else {
         println!("No");
