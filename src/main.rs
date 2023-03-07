@@ -3,9 +3,9 @@ use std::{io, time, thread};
 
 #[derive(Debug)]
 enum Ctype {
-   A,
-   B,
-   C,
+    A,
+    B,
+    C,
 }
 
 #[derive(Debug)]
@@ -71,7 +71,7 @@ impl Ai {
 }
 
 fn main() {
-    let mut usrmode = String::new();
+    let mut usrmode: String = String::new();
 
     println!("Choose something something: ");
     io::stdin().read_line(&mut usrmode).expect("no");
@@ -86,10 +86,10 @@ fn main() {
 }
 
 fn game_init() {
-    let mut player1 = player_init();
+    let player1: Player = player_init();
     println!("{:?}", player1);
 
-    let mut aiplayer1 = ai_init("Ai".to_string(), Atype::B);
+    let aiplayer1: Ai = ai_init("Ai".to_string());
     println!("{:?}", aiplayer1);
 
     game_core(player1, aiplayer1);
@@ -101,7 +101,7 @@ fn player_init() -> Player {
     io::stdin().read_line(&mut player_name).expect("No");
     player_name = String::from(player_name.trim());
     
-    let mut player = Player {
+    let mut player: Player = Player {
         name: player_name,
         ctype: get_player_class(),
         max_hp: thread_rng().gen_range(150..=200),
@@ -136,10 +136,10 @@ fn get_player_class() -> Ctype {
     };
 }
 
-fn ai_init(pname: String, class: Atype) -> Ai {
-    let mut ai = Ai {
+fn ai_init(pname: String) -> Ai {
+    let mut ai: Ai = Ai {
         name: pname,
-        ctype: class,
+        ctype: get_ai_class(),
         max_hp: thread_rng().gen_range(150..=200),
         current_hp: 0,
         strength: thread_rng().gen_range(20..=60),
@@ -148,6 +148,21 @@ fn ai_init(pname: String, class: Atype) -> Ai {
     };
     ai.current_hp = ai.max_hp;
     return ai
+}
+
+fn get_ai_class() -> Atype {
+    let randclass: u8 = thread_rng().gen_range(1..=3);
+
+    if randclass == 1 {
+        return Atype::A
+    } else if randclass == 2 {
+        return Atype::B
+    } else if randclass == 3 {
+        return Atype::C
+    } else {
+        println!("Alejandro como?");
+        return Atype::A
+    }
 }
 
 fn game_core(mut p1: Player, mut ai1: Ai) {
