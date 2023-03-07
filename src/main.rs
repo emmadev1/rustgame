@@ -86,12 +86,7 @@ fn main() {
 }
 
 fn game_init() {
-    let mut player_name: String = String::new();
-    println!("Choose a name: ");
-    io::stdin().read_line(&mut player_name).expect("No");
-    player_name = String::from(player_name.trim());
-    
-    let mut player1 = player_init(player_name, Ctype::A);
+    let mut player1 = player_init();
     println!("{:?}", player1);
 
     let mut aiplayer1 = ai_init("Ai".to_string(), Atype::B);
@@ -100,10 +95,15 @@ fn game_init() {
     game_core(player1, aiplayer1);
 }
 
-fn player_init(pname: String, class: Ctype) -> Player {
+fn player_init() -> Player {
+    let mut player_name: String = String::new();
+    println!("Choose a name: ");
+    io::stdin().read_line(&mut player_name).expect("No");
+    player_name = String::from(player_name.trim());
+    
     let mut player = Player {
-        name: pname,
-        ctype: class,
+        name: player_name,
+        ctype: get_player_class(),
         max_hp: thread_rng().gen_range(150..=200),
         current_hp: 0,
         strength: thread_rng().gen_range(20..=60),
@@ -112,6 +112,28 @@ fn player_init(pname: String, class: Ctype) -> Player {
     };
     player.current_hp = player.max_hp;
     return player
+}
+
+fn get_player_class() -> Ctype {
+    let mut player_class: String = String::new();
+    loop {
+        println!("Choose a class (h for details):\n1)  A\n2)  B\n3)  C");
+        io::stdin().read_line(&mut player_class).expect("No");
+        
+        if player_class.trim() == "h".to_string() {
+            println!("Placeholder");
+            player_class.clear();
+        } else if player_class.trim() == "a".to_string() {
+            return Ctype::A
+        } else if player_class.trim() == "b".to_string() {
+            return Ctype::B
+        } else if player_class.trim() == "c".to_string() {
+            return Ctype::C
+        } else {
+            println!("Choose a proper class!");
+            player_class.clear();
+        }
+    };
 }
 
 fn ai_init(pname: String, class: Atype) -> Ai {
