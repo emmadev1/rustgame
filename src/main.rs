@@ -42,7 +42,7 @@ struct Player {
 #[derive(Debug)]
 struct Ai {
     name: String,
-    ctype: Atype,
+    atype: Atype,
     max_hp: i16,
     current_hp: i16,
     strength: i16,
@@ -104,12 +104,17 @@ fn player_init() -> Player {
     let mut player: Player = Player {
         name: player_name,
         ctype: get_player_class(),
-        max_hp: thread_rng().gen_range(150..=200),
+        max_hp: 0,
         current_hp: 0,
-        strength: thread_rng().gen_range(20..=60),
-        magic: thread_rng().gen_range(30..=50),
-        defense: thread_rng().gen_range(0..=15),
+        strength: 0,
+        magic: 0,
+        defense: 0,
     };
+    player.max_hp = get_player_attribute(&player.ctype, "max_hp".to_string());
+    player.strength = get_player_attribute(&player.ctype, "strength".to_string());
+    player.magic = get_player_attribute(&player.ctype, "magic".to_string());
+    player.defense = get_player_attribute(&player.ctype, "defense".to_string());
+
     player.current_hp = player.max_hp;
     return player
 }
@@ -121,7 +126,7 @@ fn get_player_class() -> Ctype {
         io::stdin().read_line(&mut player_class).expect("No");
         
         if player_class.trim() == "h".to_string() {
-            println!("Placeholder");
+            println!("There are no details");
             player_class.clear();
         } else if player_class.trim() == "a".to_string() {
             return Ctype::A
@@ -136,16 +141,68 @@ fn get_player_class() -> Ctype {
     };
 }
 
+fn get_player_attribute(template: &Ctype, attrib: String) -> i16 {
+    match template {
+        Ctype::A => {
+            if attrib == "max_hp".to_string() {
+                return thread_rng().gen_range(100..=120)
+            } else if attrib == "strength" {
+                return thread_rng().gen_range(50..=90)
+            } else if attrib == "magic" {
+                return 0
+            } else if attrib == "defense" {
+                return thread_rng().gen_range(0..=5)
+            } else {
+                println!("Hola");
+                return 0
+            }
+        }
+        Ctype::B => {
+            if attrib == "max_hp".to_string() {
+                return thread_rng().gen_range(200..=250)
+            } else if attrib == "strength" {
+                return thread_rng().gen_range(10..=35)
+            } else if attrib == "magic" {
+                return 0
+            } else if attrib == "defense" {
+                return thread_rng().gen_range(15..=25)
+            } else {
+                println!("Hola");
+                return 0
+            }
+        }
+        Ctype::C => {
+            if attrib == "max_hp".to_string() {
+                return thread_rng().gen_range(70..=140)
+            } else if attrib == "strength" {
+                return thread_rng().gen_range(10..=30)
+            } else if attrib == "magic" {
+                return thread_rng().gen_range(70..=90)
+            } else if attrib == "defense" {
+                return thread_rng().gen_range(0..=2)
+            } else {
+                println!("Hola");
+                return 0
+            }
+        }
+    }
+}
+
 fn ai_init(pname: String) -> Ai {
     let mut ai: Ai = Ai {
         name: pname,
-        ctype: get_ai_class(),
-        max_hp: thread_rng().gen_range(150..=200),
+        atype: get_ai_class(),
+        max_hp: 0,
         current_hp: 0,
-        strength: thread_rng().gen_range(20..=60),
-        magic: thread_rng().gen_range(30..=50),
-        defense: thread_rng().gen_range(0..=15),
+        strength: 0,
+        magic: 0,
+        defense: 0,
     };
+    ai.max_hp = get_ai_attribute(&ai.atype, "max_hp".to_string());
+    ai.strength = get_ai_attribute(&ai.atype, "strength".to_string());
+    ai.magic = get_ai_attribute(&ai.atype, "magic".to_string());
+    ai.defense = get_ai_attribute(&ai.atype, "defense".to_string());
+
     ai.current_hp = ai.max_hp;
     return ai
 }
@@ -162,6 +219,53 @@ fn get_ai_class() -> Atype {
     } else {
         println!("Alejandro como?");
         return Atype::A
+    }
+}
+
+fn get_ai_attribute(template: &Atype, attrib: String) -> i16 {
+    match template {
+        Atype::A => {
+            if attrib == "max_hp".to_string() {
+                return thread_rng().gen_range(100..=120)
+            } else if attrib == "strength" {
+                return thread_rng().gen_range(50..=90)
+            } else if attrib == "magic" {
+                return 0
+            } else if attrib == "defense" {
+                return thread_rng().gen_range(0..=5)
+            } else {
+                println!("Hola");
+                return 0
+            }
+        }
+        Atype::B => {
+            if attrib == "max_hp".to_string() {
+                return thread_rng().gen_range(200..=250)
+            } else if attrib == "strength" {
+                return thread_rng().gen_range(10..=35)
+            } else if attrib == "magic" {
+                return 0
+            } else if attrib == "defense" {
+                return thread_rng().gen_range(15..=25)
+            } else {
+                println!("Hola");
+                return 0
+            }
+        }
+        Atype::C => {
+            if attrib == "max_hp".to_string() {
+                return thread_rng().gen_range(70..=140)
+            } else if attrib == "strength" {
+                return thread_rng().gen_range(10..=30)
+            } else if attrib == "magic" {
+                return thread_rng().gen_range(70..=90)
+            } else if attrib == "defense" {
+                return thread_rng().gen_range(0..=2)
+            } else {
+                println!("Hola");
+                return 0
+            }
+        }
     }
 }
 
