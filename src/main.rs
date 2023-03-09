@@ -295,10 +295,10 @@ fn usr_turn(p1: &Player, ai1: &Ai) -> i16 {
     
     if usrin.trim() == String::from("1") {
         println!("{} uses basic!", p1.name);
-        p1.attack_basic(&ai1)
+        check_dmg(p1.attack_basic(&ai1))
     } else if usrin.trim() == String::from("2") {
         println!("{} uses magic!", p1.name);
-        p1.attack_magic(&ai1)
+        check_dmg(p1.attack_magic(&ai1))
     } else {
         println!("No");
         0
@@ -308,17 +308,27 @@ fn usr_turn(p1: &Player, ai1: &Ai) -> i16 {
 fn ai_turn(ai1: &Ai, p1: &Player) -> i16 {
     let selec: u8 = thread_rng().gen_range(0..=1);
 
-    if p1.defense > 11 {
+    if p1.defense > 11 && ai1.magic > 2 {
         println!("Ai uses magic!");
-        ai1.attack_magic(&p1)
+        check_dmg(ai1.attack_magic(&p1))
+    } else if ai1.magic == 0 {
+        check_dmg(ai1.attack_basic(&p1))
     } else if selec == 0 {
         println!("Ai uses basic!");
-        ai1.attack_basic(&p1)
+        check_dmg(ai1.attack_basic(&p1))
     } else if selec == 1 {
         println!("Ai uses magic!");
-        ai1.attack_magic(&p1)
+        check_dmg(ai1.attack_magic(&p1))
     } else {
         println!("No");
         0
+    }
+}
+
+fn check_dmg (dmg: i16) -> i16 {
+    if dmg < 0 {
+        return 1
+    } else {
+        return dmg
     }
 }
