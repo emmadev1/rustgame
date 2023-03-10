@@ -128,11 +128,11 @@ fn get_player_class() -> Ctype {
         if player_class.trim() == "h".to_string() {
             println!("There are no details");
             player_class.clear();
-        } else if player_class.trim() == "a".to_string() {
+        } else if player_class.trim() == "a".to_string() || player_class.trim() == "1".to_string() {
             return Ctype::A
-        } else if player_class.trim() == "b".to_string() {
+        } else if player_class.trim() == "b".to_string() || player_class.trim() == "2".to_string() {
             return Ctype::B
-        } else if player_class.trim() == "c".to_string() {
+        } else if player_class.trim() == "c".to_string() || player_class.trim() == "3".to_string() {
             return Ctype::C
         } else {
             println!("Choose a proper class!");
@@ -159,9 +159,9 @@ fn get_player_attribute(template: &Ctype, attrib: String) -> i16 {
         }
         Ctype::B => {
             if attrib == "max_hp".to_string() {
-                return thread_rng().gen_range(200..=250)
+                return thread_rng().gen_range(250..=300)
             } else if attrib == "strength" {
-                return thread_rng().gen_range(10..=35)
+                return thread_rng().gen_range(20..=35)
             } else if attrib == "magic" {
                 return 0
             } else if attrib == "defense" {
@@ -240,9 +240,9 @@ fn get_ai_attribute(template: &Atype, attrib: String) -> i16 {
         }
         Atype::B => {
             if attrib == "max_hp".to_string() {
-                return thread_rng().gen_range(200..=250)
+                return thread_rng().gen_range(250..=350)
             } else if attrib == "strength" {
-                return thread_rng().gen_range(10..=35)
+                return thread_rng().gen_range(20..=35)
             } else if attrib == "magic" {
                 return 0
             } else if attrib == "defense" {
@@ -312,6 +312,7 @@ fn ai_turn(ai1: &Ai, p1: &Player) -> i16 {
         println!("Ai uses magic!");
         check_dmg(ai1.attack_magic(&p1))
     } else if ai1.magic == 0 {
+        println!("Ai uses magic!");
         check_dmg(ai1.attack_basic(&p1))
     } else if selec == 0 {
         println!("Ai uses basic!");
@@ -326,7 +327,7 @@ fn ai_turn(ai1: &Ai, p1: &Player) -> i16 {
 }
 
 fn check_dmg (dmg: i16) -> i16 {
-    if dmg < 0 {
+    if dmg <= 0 {
         return 1
     } else {
         return dmg
